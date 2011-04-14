@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>index</title>
+	<meta name="generator" content="TextMate http://macromates.com/">
+	<meta name="author" content="Aaron saunders">
+	<!-- Date: 2010-11-02 -->
+</head>
+<body>
+	<button onclick='Ti.App.fireEvent("fromwebview",{name:"Aaron Saunders"});'>hello</button>
+	<a href="/" onclick='Ti.App.fireEvent("fromwebview",{name:"tab_identifier"}); return false;'>Switch Tab</a>
+	<p></p>
+	<div id='testButton'>TEST BUTTON</div>
+</body>
+
+<script>
+	var _button = document.getElementById ("testButton");
+
+    _button.onmousedown = function () {
+    	alert (this.id);
+	    Ti.App.fireEvent('fromwebview', {name:this.id});
+		return false;
+	};
+
+</script>
+
+
+</html>
