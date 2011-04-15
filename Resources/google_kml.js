@@ -9,18 +9,11 @@ var goog = {
     goog.maps.kml.addRoutesToMap = function(maps, url) {
         var xhr = Titanium.Network.createHTTPClient();
 
-        xhr.setRequestHeader("Accept-Encoding","gzip,deflate");
         xhr.open('GET', url);
-        xhr.setRequestHeader("Accept-Encoding","gzip,deflate");
 
-        xhr.ondatastream = function(e) {
-            Ti.API.info('*****ONDATASTREAM - PROGRESS: ' + e.progress);
-
+        xhr.onload = function() {
         };
-        xhr.onsendstream = function(e) {
-            Ti.API.info('#####ONSENDSTREAM - PROGRESS: ' + e.progress);
-
-        };
+        
         xhr.onload = function() {
 
             var kml = goog.maps.kml.parse( Titanium.XML.parseString(xhr.responseText) );
@@ -40,7 +33,14 @@ var goog = {
             points = [];
             placeMark = kml.placeMarks.item(pm);
             try {
-                line = placeMark.getElementsByTagName('LinearRing').item(0);
+
+                // sometimes "LineString", sometimes "LinearRing", so check for both
+                if (placeMark.getElementsByTagName('LinearRing')) {
+                    line = placeMark.getElementsByTagName('LinearRing').item(0);
+                } else if (placeMark.getElementsByTagName('LineString')) {
+                    line = placeMark.getElementsByTagName('LineString').item(0);
+                }
+
                 coords = line.getElementsByTagName('coordinates').item(0).text.split(" ");
                 coords_length = coords.length;
                 for(var cc=0; cc<coords_length; cc++) {
@@ -59,8 +59,8 @@ var goog = {
                 route = {
                     name: placeMark.getElementsByTagName('name').item(0).text,
                     points: points,
-                    color: '#'+ kml.styles[styleId].color,//make sure this is a websafe color or else the color will be picked for you.
-                    width: kml.styles[styleId].width
+                    color:  '#ff00ffff', //'#'+ kml.styles[styleId].color,//make sure this is a websafe color or else the color will be picked for you.
+                    width: 4 //kml.styles[styleId].width
                 };
 
                 Ti.API.debug("route " + JSON.stringify(route));
